@@ -1,4 +1,3 @@
-
 clc;
 close all;
 
@@ -12,14 +11,12 @@ N_cp = N / 4;
 % preamble len
 Tp = 1000;
 % 이미지 경로
-img_path = 'C:\Users\Donghwi\Desktop\DoHW\24-2\통설\Report4';
-
 
 % disp('############### Step 3. 이미지 전송에 repetition coding을 적용해 보겠습니다.');
 disp('################################### tx_signal을 만들겠습니다.');
 
 % disp('image를 읽어옵니다.');
-img = imread(fullfile(img_path, 'Lena_color.png'));
+img = imread( 'Lena_color.png');
 
 % disp('image를 factor 비율만큼 줄입니다.');
 img_resize_scale_rate = 0.5;

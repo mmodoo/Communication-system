@@ -1,20 +1,13 @@
-Fs = 10000;
-repetition_factor = 3;
-% recording_time_sec = 17 * 5 + 10;
-recording_time_sec = 20;
+clc;
+clear;
+close all;
 
-% Preamble
-omega = 10;
-mu = 0.1;
-Tp = 1000;
-tp = (1:Tp).';
-preamble = cos(omega * tp + mu * tp.^2 / 2);
-% M = length(symbols);
-M = 16384 * 3;
-N = 256;
-N_cp = N / 4;
-cn = M / (N / 2);
-N_blk = cn + cn / 4;
+
+Fs = 10000;
+% repetition_factor = 3;
+% recording_time_sec = 17 * 5 + 10;
+recording_time_sec = 12;
+
 
 % 수신 시작
 devicereader = audioDeviceReader(Fs);
@@ -27,6 +20,56 @@ while toc < recording_time_sec  % recording_time_sec 동안 녹음
     rx_signal = [rx_signal; acquiredAudio];
 end
 disp('Recording Completed')
+
+% Source Encoding
+imresize_scale = 0.5;
+img = imread( 'Lena_color.png');
+resized_img = imresize(img, imresize_scale);
+gray_img = rgb2gray(resized_img);
+binarized_img = imbinarize(gray_img);
+bits = binarized_img(:);
+img_size = 128;
+
+
+k = 4; % Number of valid bits in 1 coded bits
+c = 3; % Number of parities in 1 coded bits
+n = k + c; % Number of total bits in 1 coded bits
+A = [1 1 1;
+     1 1 0;
+     1 0 1;
+     0 1 1]; % Parity generator matrix
+G = [eye(k), A]; % Code generator matrix
+
+% Parity-check matrix H for decoding
+H = [A', eye(c)];
+
+reshaped_bits = reshape(bits, [k, length(bits)/k])';
+
+% Step 3: Encode each 4-bit block using Hamming (7,4)
+hamming_coded_bits = mod(reshaped_bits * G, 2);
+
+transpose_hamming_coded_bits = hamming_coded_bits.';
+channel_coded_bits = transpose_hamming_coded_bits(:);
+
+% disp('BPSK modulation을 합니다.');
+symbols = 2 * channel_coded_bits - 1;
+
+% disp('symbol len, 전체 OFDM 심볼의 개수, pilot 신호를 포함한 전체 블록의 개수를 설정합니다.');
+M = length(symbols);
+N = 256;
+N_cp = N / 4;
+cn = M / (N / 2);
+N_blk = cn + cn / 4;
+
+
+
+% Preamble
+omega = 10;
+mu = 0.1;
+Tp = 1000;
+tp = (1:Tp).';
+preamble = cos(omega * tp + mu * tp.^2 / 2);
+
 
 % Time Synchronisation
 [xC, lags] = xcorr(rx_signal, preamble);
@@ -59,45 +102,39 @@ for i = 1 : length(demode_OFDM_blks)
 end
 
 % Detection
+symbols_detect_a = {};
 symbols_detect = {};
+
 for i = 1 : length(symbols_eq)
     symbols_detect{end + 1} = sign(real(symbols_eq{i}));
+    symbols_detect_a{end + 1} = real(symbols_eq{i});
+
 end
 
 % Demodulation
 symbols_est = [];
+received_symbols = [];
 for i = 1 : length(symbols_detect)
     symbols_est = [symbols_est; symbols_detect{i}(2 : N / 2 + 1)];
+    received_symbols = [received_symbols; symbols_detect_a{i}(2 : N / 2 + 1)];
 end
 
 % BPSK Demodulation
 demodulated_bits = (symbols_est + 1) / 2;
 
-img_size = sqrt(length(demodulated_bits));
-estimated_img = reshape(demodulated_bits, [img_size, img_size]); 
-resized_estimated_img = imresize(estimated_img, 1 / imresize_scale);
-imshow(resized_estimated_img);
-
-% disp('image를 읽어옵니다.');
-img = imread(fullfile(img_path, 'Lena_color.png'));
-
-% disp('image를 factor 비율만큼 줄입니다.');
-img_resize_scale_rate = 0.5;
-resized_img = imresize(img, img_resize_scale_rate);
-
-% disp('image를 gray-scale로 바꿉니다.');
-gray_img = rgb2gray(resized_img);
-
-% disp('image를 monochrome으로 바꿉니다.');
-binarised_img = imbinarize(gray_img);
-
-% disp('bit로 전송하기 위해, Column vector로 형식을 바꿉니다.');
-bits = binarised_img(:);
-
-[~, BER_repetition_uncoded] = biterr(bits, repetition_decoded_bits);
-disp(BER_repetition_uncoded);
+% %% uncoded
+% img_size = sqrt(length(demodulated_bits));
+% estimated_img = reshape(demodulated_bits, [img_size, img_size]); 
+% resized_estimated_img = imresize(estimated_img, 1 / imresize_scale);
+% imshow(resized_estimated_img);
+% 
+% [~, BER_repetition_uncoded] = biterr(bits, demodulated_bits);
+% disp(BER_repetition_uncoded);
 
 %% Hard Decision
+
+bits = bits';
+
 % Step 5: Reshape received bits for decoding
 received_bits = reshape(demodulated_bits, [n, length(demodulated_bits)/n])';
 
@@ -128,9 +165,18 @@ HD_decoded_bits = HD_decoded_bits';
 HD_decoded_bits = HD_decoded_bits(:)';
 HD_decoded_bits = HD_decoded_bits(1:length(bits));  % Truncate any padding
 
+figure;
+subplot(1, 2, 1);
+
+estimated_img_HD = reshape(HD_decoded_bits, [img_size, img_size]); 
+resized_estimated_img_HD = imresize(estimated_img_HD, 1 / imresize_scale);
+imshow(resized_estimated_img_HD);
+title('Soft Decision Decoding');
+
+
 [~, BER_HD_decoded_bits] = biterr(bits, HD_decoded_bits);
 disp('BER for Hard Decision Decoding:');
-disp(BER_HD_decoded_bits);
+title('Hard Decision Decoding');
 
 %% Soft decision w/ noise
 
@@ -156,11 +202,19 @@ for i = 1:size(received_bits, 1)
 end
 
 % Reshape decoded bits back to the original size
-SD_decoded_bits = soft_decoded_bits';
-SD_decoded_bits = SD_decoded_bits(:)';
-SD_decoded_bits = SD_decoded_bits(1:length(bits));  % Truncate any padding
+soft_decoded_bits = soft_decoded_bits';
+soft_decoded_bits = soft_decoded_bits(:)';
+soft_decoded_bits = soft_decoded_bits(1:length(bits));  % Truncate any padding
+
+subplot(1, 2, 2);  % 1 row, 2 columns, second subplot
+
+estimated_img_SD = reshape(soft_decoded_bits, [img_size, img_size]); 
+resized_estimated_img_SD = imresize(estimated_img_SD, 1 / imresize_scale);
+imshow(resized_estimated_img_SD);
+title('Soft Decision Decoding');
+
 
 % Calculate BER for Soft Decision
-[~, BER_SD_decoded_bits] = biterr(bits, SD_decoded_bits);
+[~, BER_SD_decoded_bits] = biterr(bits, soft_decoded_bits);
 disp('BER for Soft Decision Decoding:');
 disp(BER_SD_decoded_bits);
