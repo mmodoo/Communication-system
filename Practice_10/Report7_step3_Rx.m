@@ -49,17 +49,12 @@ hamming_coded_bits = mod(reshaped_bits * G, 2);
 transpose_hamming_coded_bits = hamming_coded_bits.';
 channel_coded_bits = transpose_hamming_coded_bits(:);
 
-% disp('BPSK modulation을 합니다.');
-symbols = 2 * channel_coded_bits - 1;
-
 % disp('symbol len, 전체 OFDM 심볼의 개수, pilot 신호를 포함한 전체 블록의 개수를 설정합니다.');
-M = length(symbols);
+M = length(channel_coded_bits);
 N = 256;
 N_cp = N / 4;
 cn = M / (N / 2);
 N_blk = cn + cn / 4;
-
-
 
 % Preamble
 omega = 10;
@@ -120,22 +115,6 @@ end
 % BPSK Demodulation
 demodulated_bits = (symbols_est + 1) / 2;
 
-%% uncoded
-img_size = sqrt(length(demodulated_bits));
-estimated_img = reshape(demodulated_bits, [img_size, img_size]); 
-resized_estimated_img = imresize(estimated_img, 1 / imresize_scale);
-
-figure;
-subplot(1, 3, 1);
-imshow(resized_estimated_img);
-title('Uncoded Image');
-
-
-[~, BER_repetition_uncoded] = biterr(bits, demodulated_bits);
-disp(BER_repetition_uncoded);
-
-%% Hard Decision
-
 bits = bits';
 
 % Step 5: Reshape received bits for decoding
@@ -147,6 +126,8 @@ HD_decoded_bits = zeros(size(reshaped_bits));  % Initialize for storing decoded 
 
 for i = 1:size(syndrome_matrix, 1)
     % Convert syndrome to decimal to identify error position
+    uncoded_bits(i,:)= received_bits(i, 1:k);
+
     syndrome_decimal = bi2de(syndrome_matrix(i, :), 'left-msb');
     correction_bits = 8-syndrome_decimal;
     if syndrome_decimal ~= 0
@@ -161,7 +142,33 @@ for i = 1:size(syndrome_matrix, 1)
     end
     % Extract the corrected data bits (first 4 bits)
     HD_decoded_bits(i, :) = received_bits(i, 1:k);
+    
 end
+
+%% uncoded
+
+uncoded_bits = uncoded_bits';
+uncoded_bits = uncoded_bits(:)';
+uncoded_bits = uncoded_bits(1:length(bits));  % Truncate any padding
+
+
+img_size = sqrt(length(uncoded_bits));
+estimated_img = reshape(uncoded_bits, [img_size, img_size]); 
+resized_estimated_img = imresize(estimated_img, 1 / imresize_scale);
+
+figure;
+subplot(1, 3, 1);
+imshow(resized_estimated_img);
+title('Uncoded Image');
+
+
+[~, BER_uncoded] = biterr(bits, uncoded_bits);
+disp('BER for Uncoded:');
+disp(BER_uncoded);
+
+%% Hard Decision
+
+
 
 % Reshape decoded bits back to the original size
 HD_decoded_bits = HD_decoded_bits';
