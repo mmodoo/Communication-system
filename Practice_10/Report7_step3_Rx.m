@@ -28,8 +28,6 @@ resized_img = imresize(img, imresize_scale);
 gray_img = rgb2gray(resized_img);
 binarized_img = imbinarize(gray_img);
 bits = binarized_img(:);
-img_size = 128;
-
 
 k = 4; % Number of valid bits in 1 coded bits
 c = 3; % Number of parities in 1 coded bits
@@ -122,14 +120,19 @@ end
 % BPSK Demodulation
 demodulated_bits = (symbols_est + 1) / 2;
 
-% %% uncoded
-% img_size = sqrt(length(demodulated_bits));
-% estimated_img = reshape(demodulated_bits, [img_size, img_size]); 
-% resized_estimated_img = imresize(estimated_img, 1 / imresize_scale);
-% imshow(resized_estimated_img);
-% 
-% [~, BER_repetition_uncoded] = biterr(bits, demodulated_bits);
-% disp(BER_repetition_uncoded);
+%% uncoded
+img_size = sqrt(length(demodulated_bits));
+estimated_img = reshape(demodulated_bits, [img_size, img_size]); 
+resized_estimated_img = imresize(estimated_img, 1 / imresize_scale);
+
+figure;
+subplot(1, 3, 1);
+imshow(resized_estimated_img);
+title('Uncoded Image');
+
+
+[~, BER_repetition_uncoded] = biterr(bits, demodulated_bits);
+disp(BER_repetition_uncoded);
 
 %% Hard Decision
 
@@ -165,18 +168,20 @@ HD_decoded_bits = HD_decoded_bits';
 HD_decoded_bits = HD_decoded_bits(:)';
 HD_decoded_bits = HD_decoded_bits(1:length(bits));  % Truncate any padding
 
-figure;
-subplot(1, 2, 1);
+
 
 estimated_img_HD = reshape(HD_decoded_bits, [img_size, img_size]); 
 resized_estimated_img_HD = imresize(estimated_img_HD, 1 / imresize_scale);
+
+subplot(1, 3, 2);
+
 imshow(resized_estimated_img_HD);
-title('Soft Decision Decoding');
+title('Hard Decision Decoding');
 
 
 [~, BER_HD_decoded_bits] = biterr(bits, HD_decoded_bits);
 disp('BER for Hard Decision Decoding:');
-title('Hard Decision Decoding');
+disp(BER_HD_decoded_bits);
 
 %% Soft decision w/ noise
 
@@ -206,7 +211,7 @@ soft_decoded_bits = soft_decoded_bits';
 soft_decoded_bits = soft_decoded_bits(:)';
 soft_decoded_bits = soft_decoded_bits(1:length(bits));  % Truncate any padding
 
-subplot(1, 2, 2);  % 1 row, 2 columns, second subplot
+subplot(1, 3, 3);
 
 estimated_img_SD = reshape(soft_decoded_bits, [img_size, img_size]); 
 resized_estimated_img_SD = imresize(estimated_img_SD, 1 / imresize_scale);
