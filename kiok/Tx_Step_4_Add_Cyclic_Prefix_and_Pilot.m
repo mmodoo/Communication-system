@@ -1,3 +1,4 @@
+% function [Tx_signal, Symbols_IFFTed_at_time]  = Tx_Step_4_Add_Cyclic_Prefix_and_Pilot(Symbols_IFFTed_at_time, N, N_cp__that_is__Cyclic_Prefix_Length, Subcarrier_Freq_Divided_by, Whether_Basic_Pilot__OR__PAPR_improved_Pilot, Whether_Pilot_Use_all_freq__OR__High_freq_only)
 function Tx_signal = Tx_Step_4_Add_Cyclic_Prefix_and_Pilot(Symbols_IFFTed_at_time, N, N_cp__that_is__Cyclic_Prefix_Length, Subcarrier_Freq_Divided_by, Whether_Basic_Pilot__OR__PAPR_improved_Pilot, Whether_Pilot_Use_all_freq__OR__High_freq_only)
     
     for i = 1:length(Symbols_IFFTed_at_time)
@@ -8,9 +9,10 @@ function Tx_signal = Tx_Step_4_Add_Cyclic_Prefix_and_Pilot(Symbols_IFFTed_at_tim
         Pilot_freq = ones(N+2, 1);
     else
         rng('default');
-        if Whether_Pilot_Use_all_freq__OR__High_freq_only == false
+        if Whether_Pilot_Use_all_freq__OR__High_freq_only == true
             temp_pilot = 2 * (randi([0, 1], N/2, 1) - 0.5);  % N/2 개만 생성
         else
+            disp('a');
             % temp_pilot_1 = zeros(3*N/8, 1);
             % temp_pilot_2 = 2 * (randi([0, 1], N/8, 1) - 0.5);
             % temp_pilot_1 = zeros((Subcarrier_Freq_Divided_by-1)*N/(2*Subcarrier_Freq_Divided_by), 1);

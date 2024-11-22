@@ -1,5 +1,5 @@
 Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = true;
-% Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = false;
+Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = false;
 % 컴퓨터 바뀔 때마다 체크해야할 부분 == CTRL + F "여기 반드시 확인"
 % 여기 반드시 확인
 Save_and_Load_Wav_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Tx_signal.WAV";
@@ -41,8 +41,8 @@ if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
     Whether_Pilot_Use_all_freq__OR__High_freq_only = false;
     
     % Tx_Step_5_High_pass_filter
-    Whether_High_pass_filter__OR__NOT = true;
-    % Whether_High_pass_filter__OR__NOT = false;
+    % Whether_High_pass_filter__OR__NOT = true;
+    Whether_High_pass_filter__OR__NOT = false;
     Sampling_Freq = 48000;
     Cut_off_Freq = (Sampling_Freq / 2) * (1 - 2 * (1/Subcarrier_Freq_Divided_by)); % 48000Hz, 6 경우에 16000HZ
     Cut_off_Freq_normalised = Cut_off_Freq / (Sampling_Freq / 2);
@@ -64,8 +64,11 @@ if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
 
     % Tx_Step_9_Save_Tx_signal_MAT_and_WAV
     % 여기 반드시 확인
+    Whether_Use_Base_WAV__OR__NOT = true;
+    % Whether_Use_Base_WAV__OR__NOT = false;
     Save_and_Load_Tx_signal_MAT_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Tx_signal.MAT";
     Base_WAV_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Base.WAV";
+    Amplitude_ratio_Base_WAV_over_Tx_signal_WAV = 10;
     
     
 
@@ -74,12 +77,9 @@ if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
 
     Binarised_img_column_vector = Tx_Step_1_imread_resize_gray_mono_repetition(Img_Path_and_File_Name, Fixed_Img_Size, Whether_NOT_Repetition_coding__OR__Repetition_How_Many, Whether_PAPR_improved_inter_leaving__OR__NOT);
 
-    % [a, b] = Tx_Test_1_function();
     [PSK_modulated_symbols, OFDM_symbols_Number, Total_OFDM_symbols_Number_that_is_including_Pilot] = Tx_Step_2_PSK_modulation(Binarised_img_column_vector, Modulation_Number, N, Subcarrier_Freq_Divided_by);
-    % PSK_modulated_symbols_archieved = PSK_modulated_symbols;
 
     Symbols_IFFTed_at_time = Tx_Step_3_setting_for_IFFT_and_IFFT(PSK_modulated_symbols, N, Subcarrier_Freq_Divided_by, OFDM_symbols_Number);
-    % Symbols_IFFTed_at_time_archieved = Symbols_IFFTed_at_time;
 
     Tx_signal = Tx_Step_4_Add_Cyclic_Prefix_and_Pilot(Symbols_IFFTed_at_time, N, N_cp__that_is__Cyclic_Prefix_Length, Subcarrier_Freq_Divided_by, Whether_Basic_Pilot__OR__PAPR_improved_Pilot, Whether_Pilot_Use_all_freq__OR__High_freq_only);
 
@@ -96,12 +96,13 @@ if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
         Tx_Step_8_Plot_Tx_signal_in_many_ways(Tx_signal, Sampling_Freq);
     end
 
-    Tx_Step_9_Save_Tx_signal_MAT_and_WAV(Tx_signal, Sampling_Freq, Save_and_Load_Tx_signal_MAT_Path_and_File_Name, Save_and_Load_Wav_Path_and_File_Name, Base_WAV_Path_and_File_Name);
+    Tx_Step_9_Save_Tx_signal_MAT_and_WAV(Tx_signal, Sampling_Freq, Save_and_Load_Tx_signal_MAT_Path_and_File_Name, Save_and_Load_Wav_Path_and_File_Name, Whether_Use_Base_WAV__OR__NOT, Base_WAV_Path_and_File_Name, Amplitude_ratio_Base_WAV_over_Tx_signal_WAV);
 
     end_time = datetime("now", "Format", "yyyy-MM-dd HH:mm:ss");
     disp(['# Set_Save_Tx_signal_MAT_and_Tx_signal_WAV 종료 시각: ', char(end_time)]);
     elapsed_time = end_time - start_time;
     disp(['# Set_Save_Tx_signal_MAT_and_Tx_signal_WAV 중 총 경과 시간[s]: ', char(elapsed_time)]);
+    
 else
     close all;
     clc;

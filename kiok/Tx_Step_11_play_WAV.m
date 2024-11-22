@@ -17,7 +17,7 @@ function Tx_Step_11_play_WAV(Tx_signal, Sampling_Freq, Recording_time_Sec)
     while isplaying(player)
         pause(1);
         elapsed = elapsed + 1;
-        fprintf('\r##### 진행 시간: %d초 / %d초 (%.1f%%)', ...
+        fprintf('\r##### 진행 시간: %d초 / %d초 (%.1f%%) (스페이스바를 누르면 중지됩니다)', ...
             elapsed, ceil(Recording_time_Sec), (elapsed/Recording_time_Sec)*100);
 
         if ~ishandle(fig)  % figure가 닫혔는지 확인
