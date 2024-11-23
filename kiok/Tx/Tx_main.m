@@ -2,16 +2,16 @@ Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = true;
 Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = false;
 % 컴퓨터 바뀔 때마다 체크해야할 부분 == CTRL + F "여기 반드시 확인"
 % 여기 반드시 확인
-Save_and_Load_Wav_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Tx_signal.WAV";
+Save_and_Load_WAV_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Tx_signal.WAV";
 
 if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
-    clearvars -except Save_and_Load_Wav_Path_and_File_Name Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV;
+    clearvars -except Save_and_Load_WAV_Path_and_File_Name Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV;
     close all;
     clc;
     
     start_time = datetime("now", "Format", "yyyy-MM-dd HH:mm:ss");
     disp(['# Set_Save_Tx_signal_MAT_and_Tx_signal_WAV 시작 시각: ', char(start_time)]);
-    disp('# SETTING, mat 및 wav 파일 제조 및 저장을 실행합니다. 기존에 저장된 모든 변수는 삭제되었습니다.');
+    disp('# SETTING, MAT 및 WAV 파일 제조 및 저장을 실행합니다. 기존에 저장된 모든 변수는 삭제되었습니다.');
 
     disp('## Parameter들을 설정하겠습니다.');
 
@@ -35,14 +35,14 @@ if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
     % Tx_Step_4_Add_Cyclic_Prefix_and_Pilot
     % Whether_Basic_Pilot__OR__PAPR_improved_Pilot = true;
     Whether_Basic_Pilot__OR__PAPR_improved_Pilot = false;
-    N_cp__that_is__Cyclic_Prefix_Length = N / 4;
+    N_cp__that_is__Cyclic_Prefix_Length = N / 1;
 
     % Whether_Pilot_Use_all_freq__OR__High_freq_only = true;
     Whether_Pilot_Use_all_freq__OR__High_freq_only = false;
     
     % Tx_Step_5_High_pass_filter
-    % Whether_High_pass_filter__OR__NOT = true;
-    Whether_High_pass_filter__OR__NOT = false;
+    Whether_High_pass_filter__OR__NOT = true;
+    % Whether_High_pass_filter__OR__NOT = false;
     Sampling_Freq = 48000;
     Cut_off_Freq = (Sampling_Freq / 2) * (1 - 2 * (1/Subcarrier_Freq_Divided_by)); % 48000Hz, 6 경우에 16000HZ
     Cut_off_Freq_normalised = Cut_off_Freq / (Sampling_Freq / 2);
@@ -67,8 +67,8 @@ if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
     Whether_Use_Base_WAV__OR__NOT = true;
     % Whether_Use_Base_WAV__OR__NOT = false;
     Save_and_Load_Tx_signal_MAT_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Tx_signal.MAT";
-    Base_WAV_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Base.WAV";
-    Amplitude_ratio_Base_WAV_over_Tx_signal_WAV = 10;
+    Base_WAV_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Base_WAV\Base_6.WAV";
+    Amplitude_ratio_Base_WAV_over_Tx_signal_WAV = 1;
     
     
 
@@ -96,7 +96,7 @@ if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
         Tx_Step_8_Plot_Tx_signal_in_many_ways(Tx_signal, Sampling_Freq);
     end
 
-    Tx_Step_9_Save_Tx_signal_MAT_and_WAV(Tx_signal, Sampling_Freq, Save_and_Load_Tx_signal_MAT_Path_and_File_Name, Save_and_Load_Wav_Path_and_File_Name, Whether_Use_Base_WAV__OR__NOT, Base_WAV_Path_and_File_Name, Amplitude_ratio_Base_WAV_over_Tx_signal_WAV);
+    Tx_Step_9_Save_Tx_signal_MAT_and_WAV(Tx_signal, Sampling_Freq, Save_and_Load_Tx_signal_MAT_Path_and_File_Name, Save_and_Load_WAV_Path_and_File_Name, Whether_Use_Base_WAV__OR__NOT, Base_WAV_Path_and_File_Name, Amplitude_ratio_Base_WAV_over_Tx_signal_WAV);
 
     end_time = datetime("now", "Format", "yyyy-MM-dd HH:mm:ss");
     disp(['# Set_Save_Tx_signal_MAT_and_Tx_signal_WAV 종료 시각: ', char(end_time)]);
@@ -109,7 +109,7 @@ else
     start_time = datetime("now", "Format", "yyyy-MM-dd HH:mm:ss");
     disp(['# Only_Tx 시작 시각: ', char(start_time)]);
     disp('# Tx_signal.WAV를 재생하여 통신합니다.');
-    [Tx_signal, Sampling_Freq, Recording_time_Sec] = Tx_Step_10_Calculate_Recording_time_Sec_from_Tx_signal_WAV(Save_and_Load_Wav_Path_and_File_Name);
+    [Tx_signal, Sampling_Freq, Recording_time_Sec] = Tx_Step_10_Calculate_Recording_time_Sec_from_Tx_signal_WAV(Save_and_Load_WAV_Path_and_File_Name);
     disp(['### Recording_time_Sec: ' num2str(Recording_time_Sec) ' 초']);
 
     Tx_Step_11_play_WAV(Tx_signal, Sampling_Freq, Recording_time_Sec);
