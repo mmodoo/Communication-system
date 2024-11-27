@@ -1,9 +1,9 @@
 function Tx_main(Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV)
     % Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = true;
-    Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = false;
+    % Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = false;
     % 컴퓨터 바뀔 때마다 체크해야할 부분 == CTRL + F "여기 반드시 확인"
     % 여기 반드시 확인
-    Save_and_Load_WAV_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Tx\Tx_signal.WAV";
+    Save_and_Load_WAV_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Tx_signal.WAV";
     
     if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
         clearvars -except Save_and_Load_WAV_Path_and_File_Name Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV;
@@ -20,7 +20,7 @@ function Tx_main(Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV)
         % Whether_NOT_Repetition_coding__OR__Repetition_How_Many = 1;
         Whether_NOT_Repetition_coding__OR__Repetition_How_Many = 3;
         % 여기 반드시 확인
-        Img_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Tx\IMG.PNG";
+        Img_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\IMG.PNG";
         Fixed_Img_Size = [128 128];
         
         Whether_PAPR_improved_inter_leaving__OR__NOT = true;
@@ -52,22 +52,17 @@ function Tx_main(Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV)
         Whther_Only_Preamble_1_Chirp__OR__plus_Preamble_2 = true;
         % Whther_Only_Preamble_1_Chirp__OR__plus_Preamble_2 = false;
         % T_p__that_is_preamble_1_length_Unit_is_Sample = 1000;
-        % T_p__that_is_preamble_1_length_Unit_is_Sample = 0;
-        T_p_Sec = 1;
+        T_p__that_is_preamble_1_length_Unit_is_Sample = 0;
         omega = 10;
         mu = 0.1;
-        % tp = (1:T_p__that_is_preamble_1_length_Unit_is_Sample).';
-        tp = (0:1/Sampling_Freq:T_p_Sec).';
-        % Preamble_1_Chirp = cos(omega * tp + (mu * tp.^2 / 2));
-        f_preamble = 18000;
-        % Preamble_1_Chirp = sin(2 * pi * f_preamble * tp);
-        Preamble_1_Chirp = sin(2 * pi * f_preamble * tp);
+        tp = (1:T_p__that_is_preamble_1_length_Unit_is_Sample).';
+        Preamble_1_Chirp = cos(omega * tp + (mu * tp.^2 / 2));
     
         % Tx_Step_6_1_Add_Preamble_sin_wave   @ Step_9
         Whether_Add_Preamble_sine_wave = true;
         % Whether_Add_Preamble_sine_wave = false;
         duration = 2;
-        f_Preamble_sine_wave = 19000;
+        f_Preamble_sine_wave = 15000;
         t_Preamble_sine_wave = (0:1/Sampling_Freq:duration).';
         Preamble_sine_wave = sin(2 * pi * f_Preamble_sine_wave * t_Preamble_sine_wave);
        
@@ -79,10 +74,10 @@ function Tx_main(Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV)
     
         % Tx_Step_9_Save_Tx_signal_MAT_and_WAV
         % 여기 반드시 확인
-        % Whether_Use_Base_WAV__OR__NOT = true;
-        Whether_Use_Base_WAV__OR__NOT = false;
-        Save_and_Load_Tx_signal_MAT_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Tx\Tx_signal.MAT";
-        Base_WAV_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Base_WAV\Base_6.WAV";
+        Whether_Use_Base_WAV__OR__NOT = true;
+        % Whether_Use_Base_WAV__OR__NOT = false;
+        Save_and_Load_Tx_signal_MAT_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Tx\Tx_signal.MAT";
+        Base_WAV_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Base_WAV\Base_6.WAV";
         Amplitude_ratio_Base_WAV_over_Tx_signal_WAV = 1;
         Whether_Use_Base_WAV_Changing_through_minute = true;
         % Whether_Use_Base_WAV_Changing_through_minute = false;
