@@ -1,4 +1,4 @@
-function Estimated_Img = Rx_Step_2_Get_Estimated_Img(Rx_Setting_MAT_path_and_File_Name, Tx_signal, Base_WAV_Path_and_File_Name, Whether_median_filter, Whether_OCR, Whether_Use_Base_WAV_Changing_through_minute)
+function Estimated_Img = Rx_Step_2_Get_Estimated_Img(Rx_Setting_MAT_path_and_File_Name, Tx_signal, Base_WAV_Path_and_File_Name, Whether_median_filter, Whether_OCR, Whether_Use_Base_WAV_Changing_through_minute, Preamble)
 
     close all;
     load(Rx_Setting_MAT_path_and_File_Name);
@@ -7,46 +7,49 @@ function Estimated_Img = Rx_Step_2_Get_Estimated_Img(Rx_Setting_MAT_path_and_Fil
     start_time = datetime("now", "Format", "yyyy-MM-dd HH:mm:ss");
     disp(['## 시작 시각: ', char(start_time)]);
 
-    if Whether_Use_Base_WAV_Changing_through_minute == true
-            % 현재 시간의 '분'을 숫자로 추출
-            current_minute = minute(start_time);  % 53이 저장됨
-            
-            % 20으로 나눈 나머지를 숫자로 저장
-            remainder_num = mod(current_minute, 20) + 1;  % 13이 저장됨
-            remainder_num_spare = mod(current_minute, 20);  % 12이 저장됨
-            if remainder_num_spare == 0
-                remainder_num_spare = 20;
-            end
-            
-            % 나머지를 문자열로 변환
-            remainder_str = num2str(remainder_num);   % '13'이 저장됨
-            remainder_str_spare = num2str(remainder_num_spare);   % '12'이 저장됨
-            
-            % 파일 경로에 나머지 값 추가
-            Base_WAV_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\종합설계II (신원재 교수님)\Base_WAV\Base_" + remainder_str + ".WAV";
-            Base_WAV_Path_and_File_Name_spare = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\종합설계II (신원재 교수님)\Base_WAV\Base_" + remainder_str_spare + ".WAV";
-            % 결과: "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Base_WAV\Base13.WAV"
-    end
+    % if Whether_Use_Base_WAV_Changing_through_minute == true
+    %         % 현재 시간의 '분'을 숫자로 추출
+    %         current_minute = minute(start_time);  % 53이 저장됨
+    % 
+    %         % 20으로 나눈 나머지를 숫자로 저장
+    %         remainder_num = mod(current_minute, 20) + 1;  % 13이 저장됨
+    %         remainder_num_spare = mod(current_minute, 20);  % 12이 저장됨
+    %         if remainder_num_spare == 0
+    %             remainder_num_spare = 20;
+    %         end
+    % 
+    %         % 나머지를 문자열로 변환
+    %         remainder_str = num2str(remainder_num);   % '13'이 저장됨
+    %         remainder_str_spare = num2str(remainder_num_spare);   % '12'이 저장됨
+    % 
+    %         % 파일 경로에 나머지 값 추가
+    %         Base_WAV_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\종합설계II (신원재 교수님)\Base_WAV\Base_" + remainder_str + ".WAV";
+    %         Base_WAV_Path_and_File_Name_spare = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\종합설계II (신원재 교수님)\Base_WAV\Base_" + remainder_str_spare + ".WAV";
+    %         % 결과: "C:\Users\user\Desktop\졸업드가자\종합설계\테스트\Base_WAV\Base13.WAV"
+    % end
 
-    % [xC, lags] = xcorr(Tx_signal, Preamble);
-    % [~, idx] = max(xC);
-    % start_pt = lags(idx);
-    [Base_WAV, Fs] = audioread(Base_WAV_Path_and_File_Name);
-    [Base_WAV_spare, Fs_spare] = audioread(Base_WAV_Path_and_File_Name_spare);
-    [xC, lags] = xcorr(Tx_signal, Base_WAV);
-    [xC_spare, lags_spare] = xcorr(Tx_signal, Base_WAV_spare);
-    [max_1, idx] = max(xC);
-    [max_spare, idx_spare] = max(xC_spare);
-    if max_1 > max_spare
-        start_pt = lags(idx);
-    else
-        start_pt = lags_spare(idx_spare);
-    end
+    [xC, lags] = xcorr(Tx_signal, Preamble);
+    [~, idx] = max(xC);
+    start_pt = lags(idx);
+    % T_p__that_is_preamble_1_length_Unit_is_Sample
+    % [Base_WAV, Fs] = audioread(Base_WAV_Path_and_File_Name);
+    % [Base_WAV_spare, Fs_spare] = audioread(Base_WAV_Path_and_File_Name_spare);
+    % [xC, lags] = xcorr(Tx_signal, Base_WAV);
+    % [xC_spare, lags_spare] = xcorr(Tx_signal, Base_WAV_spare);
+    % [max_1, idx] = max(xC);
+    % [max_spare, idx_spare] = max(xC_spare);
+    % if max_1 > max_spare
+    %     start_pt = lags(idx);
+    % else
+    %     start_pt = lags_spare(idx_spare);
+    % end
     % length(Tx_signal);
     % start_pt;
 
+    % length(Preamble)
+    Tx_signal = Tx_signal(start_pt + length(Preamble) + 1 : end);
     % Tx_signal = Tx_signal(start_pt + T_p__that_is_preamble_1_length_Unit_is_Sample + 1 : end);
-    Tx_signal = Tx_signal(start_pt + 1 : end);
+    % Tx_signal = Tx_signal(start_pt + 1 : end);
 
     % Serial to Parallel
     OFDM_blks = {};

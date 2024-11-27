@@ -1,16 +1,16 @@
 % Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 1;
 % Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 2;
 % Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 3;
-% Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 4;
-Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 5; % Listening state
+Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 4;
+% Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 5; % Listening state
 Whether_there_was_an_error = false;
 Whether_OCR = true;
 % 컴퓨터 바뀔 때마다 체크해야할 부분 == CTRL + F "여기 반드시 확인"
 % 여기 반드시 확인 
-Save_and_Load_Tx_signal_MAT_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\종합설계II (신원재 교수님)\Tx\Tx_signal.MAT";
-Tx_Signal_Wav_Rx_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\종합설계II (신원재 교수님)\Tx\Tx_signal.WAV";
-Rx_Setting_MAT_path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\종합설계II (신원재 교수님)\Rx\Rx_Setting.MAT";
-Base_WAV_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\종합설계II (신원재 교수님)\Base_WAV\Base_1.WAV";
+Save_and_Load_Tx_signal_MAT_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Tx\Tx_signal.MAT";
+Tx_Signal_Wav_Rx_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Tx\Tx_signal.WAV";
+Rx_Setting_MAT_path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Rx\Rx_Setting.MAT";
+Base_WAV_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Base_WAV\Base_1.WAV";
 Listening_State_time_Sec = 1;
 
 try
@@ -98,11 +98,15 @@ if Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV == 2
 
     Whther_Only_Preamble_1_Chirp__OR__plus_Preamble_2 = true;
     % Whther_Only_Preamble_1_Chirp__OR__plus_Preamble_2 = false;
-    T_p__that_is_preamble_1_length_Unit_is_Sample = 1000;
+    T_p__that_is_preamble_1_length_Unit_is_Sample = 10000;
     omega = 10;
     mu = 0.1;
-    tp = (1:T_p__that_is_preamble_1_length_Unit_is_Sample).';
-    Preamble_1_Chirp = cos(omega * tp + (mu * tp.^2 / 2));
+    % tp = (1:T_p__that_is_preamble_1_length_Unit_is_Sample).';
+    f_preamble = 18000;
+    T_p_Sec = 1;
+    tp = (0:1/Sampling_Freq:T_p_Sec).';
+    % Preamble_1_Chirp = cos(omega * tp + (mu * tp.^2 / 2));
+    Preamble_1_Chirp = sin(2 * pi * f_preamble * tp);
     if Whther_Only_Preamble_1_Chirp__OR__plus_Preamble_2 == true
         Preamble = Preamble_1_Chirp;
     end
@@ -111,8 +115,8 @@ if Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV == 2
     Recording_Time_Sec = ((T_p__that_is_preamble_1_length_Unit_is_Sample + (Total_OFDM_symbols_Number_that_is_including_Pilot) * (N + N_cp__that_is__Cyclic_Prefix_Length)) / Sampling_Freq) * (1) + buffer_for_recording_time_sec;
     fprintf('Recording_Time_Sec: %s\n', num2str(Recording_Time_Sec));
 
-    Whether_Use_Base_WAV_Changing_through_minute = true;
-    % Whether_Use_Base_WAV_Changing_through_minute = false;
+    % Whether_Use_Base_WAV_Changing_through_minute = true;
+    Whether_Use_Base_WAV_Changing_through_minute = false;
 
     Whether_median_filter = true;
     % Whether_median_filter = false;
@@ -223,7 +227,7 @@ elseif Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV == 3 ...
             disp(['# Rx 중 총 경과 시간[s]: ', char(elapsed_time)]); 
         elseif Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV == 5
             t = 0:(1/Sampling_Freq):Listening_State_time_Sec;
-            F_wake_up_signal = 15000;
+            F_wake_up_signal = 19000;
             Wake_up_signal = sin(2 * pi * F_wake_up_signal * t);
             % Wake_up_threshold = max(xcorr(Wake_up_signal, Wake_up_signal)) / 2;
             Wake_up_threshold = 50;
@@ -278,7 +282,7 @@ elseif Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV == 3 ...
                     fprintf('\n');  % 줄바꿈 추가
                     disp('Recording Completed');
                     try
-                        Estimated_Img = Rx_Step_2_Get_Estimated_Img(Rx_Setting_MAT_path_and_File_Name, Tx_signal, Base_WAV_Path_and_File_Name, Whether_median_filter, Whether_OCR, Whether_Use_Base_WAV_Changing_through_minute);
+                        Estimated_Img = Rx_Step_2_Get_Estimated_Img(Rx_Setting_MAT_path_and_File_Name, Tx_signal, Base_WAV_Path_and_File_Name, Whether_median_filter, Whether_OCR, Whether_Use_Base_WAV_Changing_through_minute, Preamble);
                     catch ME
                         fprintf('이미지 추정에 실패하였습니다. 신호가 오긴 한 건가요?: %s\n', ME.message);
                     end
@@ -318,5 +322,5 @@ elseif Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV == 3 ...
             % disp(['# Rx 중 총 경과 시간[s]: ', char(elapsed_time)]); 
         end
     end
-    Estimated_Img = Rx_Step_2_Get_Estimated_Img(Rx_Setting_MAT_path_and_File_Name, Tx_signal, Base_WAV_Path_and_File_Name, Whether_median_filter, Whether_OCR, Whether_Use_Base_WAV_Changing_through_minute);
+    Estimated_Img = Rx_Step_2_Get_Estimated_Img(Rx_Setting_MAT_path_and_File_Name, Tx_signal, Base_WAV_Path_and_File_Name, Whether_median_filter, Whether_OCR, Whether_Use_Base_WAV_Changing_through_minute, Preamble);
 end
