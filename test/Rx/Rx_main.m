@@ -1,8 +1,8 @@
 % Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 1;
 % Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 2;
 % Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 3;
-Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 4;
-% Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 5; % Listening state
+% Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 4;
+Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 5; % Listening state
 Whether_there_was_an_error = false;
 Whether_OCR = true;
 % 컴퓨터 바뀔 때마다 체크해야할 부분 == CTRL + F "여기 반드시 확인"
@@ -103,10 +103,25 @@ if Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV == 2
     mu = 0.1;
     % tp = (1:T_p__that_is_preamble_1_length_Unit_is_Sample).';
     f_preamble = 18000;
-    T_p_Sec = 1;
+    T_p_Sec = 2;
     tp = (0:1/Sampling_Freq:T_p_Sec).';
     % Preamble_1_Chirp = cos(omega * tp + (mu * tp.^2 / 2));
     Preamble_1_Chirp = sin(2 * pi * f_preamble * tp);
+
+    % 파라미터 설정
+    f_start = 18000;        % 시작 주파수 (Hz)
+    f_end = 19000;         % 종료 주파수 (Hz)
+    T = 2;                 % 지속 시간 (초)
+    fs = Sampling_Freq;    % 샘플링 주파수 (Hz)
+    
+    % 시간 벡터 생성
+    t = (0:1/fs:T).';
+    
+    % Chirp 신호 생성
+    % 순간 주파수 = f_start + (f_end-f_start)t/T
+    % 위상 = 2π * ∫f(t)dt = 2π * (f_start*t + (f_end-f_start)t^2/(2T))
+    phase = 2*pi * (f_start*t + ((f_end-f_start)/(2*T))*t.^2);
+    Preamble_1_Chirp = cos(phase);
     if Whther_Only_Preamble_1_Chirp__OR__plus_Preamble_2 == true
         Preamble = Preamble_1_Chirp;
     end
