@@ -1,8 +1,8 @@
 % Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 1;
-% Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 2;
-Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 3;
+% Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 2;   
+% Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 3;
 % Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 4;
-% Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 5; % Listening state 
+Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV = 5; % Listening state N
 Whether_there_was_an_error = false;
 % Whether_OCR = true;
 Whether_OCR = false;
@@ -77,7 +77,7 @@ if Whether_Only_Rx__OR__Set__OR__Load_Rx_signal_MAT__OR__WAV == 2
     % Whether_PAPR_improved_inter_leaving__OR__NOT = false;
 
     Modulation_Number = 8;
-    N = 384; % 6의 배수
+    N = 384 * 2; % 6의 배수
     Subcarrier_Freq_Divided_by = 6;
 
     [OFDM_symbols_Number, Total_OFDM_symbols_Number_that_is_including_Pilot] ...
