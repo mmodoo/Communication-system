@@ -1,9 +1,9 @@
 % function Tx_main(Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV)
-    % Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = true;
-    Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = false;
+    Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = true;
+    % Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV = false;
     % 컴퓨터 바뀔 때마다 체크해야할 부분 == CTRL + F "여기 반드시 확인"
     % 여기 반드시 확인
-    Save_and_Load_WAV_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\8QAM\Tx\Tx_signal.WAV";
+    Save_and_Load_WAV_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\통신시스템설계\8QAM\test_Tx\Tx_signal.WAV";
     
     if Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV == false
         clearvars -except Save_and_Load_WAV_Path_and_File_Name Whether_Only_Tx__OR__Set_Save_Tx_signal_MAT_and_Tx_signal_WAV;
@@ -20,7 +20,7 @@
         % Whether_NOT_Repetition_coding__OR__Repetition_How_Many = 1;
         Whether_NOT_Repetition_coding__OR__Repetition_How_Many = 3;
         % 여기 반드시 확인
-        Img_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\8QAM\Tx\IMG.PNG";
+        Img_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\통신시스템설계\8QAM\test_Tx\IMG.PNG";
         Fixed_Img_Size = [128 128];
         
         Whether_PAPR_improved_inter_leaving__OR__NOT = true;
@@ -97,8 +97,8 @@
         % 여기 반드시 확인
         % Whether_Use_Base_WAV__OR__NOT = true;
         Whether_Use_Base_WAV__OR__NOT = false;
-        Save_and_Load_Tx_signal_MAT_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\8QAM\Tx\Tx_signal.MAT";
-        Base_WAV_Path_and_File_Name = "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\8QAM\Base_WAV\Base_6.WAV";
+        Save_and_Load_Tx_signal_MAT_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\통신시스템설계\8QAM\test_Tx\Tx_signal.MAT";
+        Base_WAV_Path_and_File_Name = "C:\Users\user\Desktop\졸업드가자\통신시스템설계\8QAM\test_Tx\Base_WAV\Base_6.WAV";
         Amplitude_ratio_Base_WAV_over_Tx_signal_WAV = 1;
         Whether_Use_Base_WAV_Changing_through_minute = true;
         % Whether_Use_Base_WAV_Changing_through_minute = false;
