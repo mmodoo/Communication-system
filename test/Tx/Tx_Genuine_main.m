@@ -159,7 +159,8 @@ function draw_and_transmit()
     
     function sendImage(~, ~)
         img = uint8(drawing * 255);
-        imwrite(img, "C:\Users\okmun\OneDrive\대외 공개 가능\고려대학교 전기전자공학부\24_2\통신시스템설계 (신원재 교수님)\최종프로젝트\Tx\IMG.PNG");
+        % 여기 반드시 확인
+        imwrite(img, "C:\Users\user\Desktop\졸업드가자\통신시스템설계\Tx\IMG.PNG");
         Tx_main(false);
         Tx_main(true);
     end
