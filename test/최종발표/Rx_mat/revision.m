@@ -6,7 +6,7 @@ clear
 % To verify, let's read the binary file and reconstruct 'indices' and 'centroids'
 
 % Read the binary file
-load('Rx_signal.mat');
+load('Rx_signal (1)');
 
 % Step 13: 'indices'와 'centroids'를 8비트씩 묶어 10진수로 변환
 
@@ -71,9 +71,16 @@ disp(['Centroids 변환된 10진수 값의 개수: ', num2str(length(centroids_d
 
 % Step 8: Reconstruct the quantized image (optional verification)
 quantized_img = reshape(centroids_dec(indices_dec, :), 128, 128, 3);
+quantized_img = uint8(quantized_img);
 imwrite(uint8(quantized_img), 'Lena_restored_kmeans_a.png');
 
-imshow(uint8(quantized_img)); title('K-Means Quantized Image');
+subplot(1, 2, 1);imshow(uint8(quantized_img)); title('K-Means Quantized Image');
+
+smoothed_img = imbilatfilt(quantized_img);
+
+subplot(1, 2, 2); imshow(smoothed_img); title('After Bilateral Filtering');
+
+
 
 % Step 13.6: 필요에 따라 10진수 데이터를 저장 (예: .mat 파일)
 save('kmeans_decimal_data.mat', 'indices_dec', 'centroids_dec');
